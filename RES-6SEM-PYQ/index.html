@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewable Energy — Interactive Study Guide</title>
+    <style>
+        :root {
+            --bg: #0d1a0f;
+            --surface: #152016;
+            --surface2: #1b2a1d;
+            --surface3: #223524;
+            --primary: #59d669;
+            --primary-dim: #3a9e45;
+            --on-primary: #00390c;
+            --secondary: #bccdb8;
+            --on-surface: #dce4da;
+            --on-surface2: #b8c4b5;
+            --outline: #6a7a68;
+            --outline-subtle: #3a4a38;
+            --tertiary: #7dd4bd;
+            --error: #ff6b6b;
+            --warning: #f0c040;
+            --info: #60a5fa;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 26px;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-math: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', serif;
+            --transition: 180ms cubic-bezier(0.3, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 15px;
+            scroll-behavior: smooth;
+        }
+        body {
+            background: var(--bg);
+            color: var(--on-surface);
+            font-family: var(--font-sans);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--outline-subtle);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--outline);
+        }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar {
+            width: 300px;
+            min-width: 300px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--outline-subtle);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            transition: transform var(--transition);
+        }
+        #sidebar-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--outline-subtle);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #sidebar-header .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+        }
+        #sidebar-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        #sidebar-header .subtitle {
+            font-size: 0.7rem;
+            color: var(--on-surface2);
+            font-weight: 400;
+        }
+        #search-box {
+            padding: 10px 16px;
+            flex-shrink: 0;
+        }
+        #search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-xl);
+            background: var(--surface2);
+            border: 1px solid var(--outline-subtle);
+            color: var(--on-surface);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border var(--transition);
+        }
+        #search-box input:focus {
+            border-color: var(--primary);
+        }
+        #search-box input::placeholder {
+            color: var(--outline);
+        }
+        #nav-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px 10px;
+            list-style: none;
+        }
+        #nav-list li {
+            margin-bottom: 1px;
+        }
+        #nav-list li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--on-surface2);
+            text-decoration: none;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: 1px solid transparent;
+            letter-spacing: 0.005em;
+        }
+        #nav-list li a:hover {
+            background: var(--surface2);
+            color: var(--on-surface);
+        }
+        #nav-list li a.active {
+            background: var(--surface3);
+            color: var(--primary);
+            border-color: var(--outline-subtle);
+            font-weight: 500;
+        }
+        #nav-list li a .q-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--surface3);
+            font-size: 0.7rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            color: var(--on-surface2);
+            transition: all var(--transition);
+            font-family: var(--font-mono);
+        }
+        #nav-list li a.active .q-badge {
+            background: var(--primary);
+            color: var(--on-primary);
+        }
+        #nav-list li a .q-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .nav-category {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--outline);
+            padding: 16px 14px 6px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        #main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px 40px;
+            background: var(--bg);
+        }
+        #main-content .q-header {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--outline-subtle);
+        }
+        #main-content .q-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--on-surface);
+            letter-spacing: -0.02em;
+        }
+        #main-content .q-header .q-meta {
+            font-size: 0.78rem;
+            color: var(--on-surface2);
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        #main-content .q-header .q-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 20px 22px;
+            margin-bottom: 18px;
+            border: 1px solid var(--outline-subtle);
+            transition: border var(--transition);
+        }
+        .card:hover {
+            border-color: var(--outline);
+        }
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+            letter-spacing: -0.01em;
+        }
+        .card p,
+        .card li {
+            font-size: 0.9rem;
+            color: var(--on-surface2);
+            margin-bottom: 6px;
+            line-height: 1.65;
+        }
+        .card ul {
+            padding-left: 20px;
+        }
+        .card code {
+            background: var(--surface3);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            color: var(--tertiary);
+        }
+        .math-block {
+            background: var(--surface2);
+            border-left: 3px solid var(--primary);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-family: var(--font-math);
+            font-size: 1.05rem;
+            color: var(--on-surface);
+            margin: 12px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            letter-spacing: 0.02em;
+        }
+        .math-block .var {
+            font-style: italic;
+            color: #b8d4c0;
+        }
+        .math-block .num {
+            color: #f0c040;
+            font-weight: 500;
+        }
+        .math-block .op {
+            color: #7dd4bd;
+        }
+        .math-block .unit {
+            color: #8ab89a;
+            font-size: 0.9em;
+        }
+        .math-block .fn {
+            color: #60a5fa;
+        }
+        .result-block {
+            background: var(--surface3);
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            margin: 10px 0;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+            margin: 10px 0;
+        }
+        table th {
+            background: var(--surface3);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--on-surface);
+            border-bottom: 2px solid var(--outline-subtle);
+            font-size: 0.8rem;
+        }
+        table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--outline-subtle);
+            color: var(--on-surface2);
+        }
+        table tr:hover td {
+            background: var(--surface2);
+        }
+
+        /* ===== GRAPH CONTAINER ===== */
+        .graph-container {
+            background: var(--surface2);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            margin: 12px 0;
+            border: 1px solid var(--outline-subtle);
+            position: relative;
+        }
+        .graph-container canvas {
+            display: block;
+            width: 100%;
+            border-radius: var(--radius-sm);
+        }
+        .sim-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .sim-controls label {
+            font-size: 0.8rem;
+            color: var(--on-surface2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        .sim-controls input[type="range"] {
+            -webkit-appearance: none;
+            width: 120px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface3);
+            outline: none;
+            cursor: pointer;
+        }
+        .sim-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid var(--bg);
+        }
+        .sim-controls select {
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--surface3);
+            color: var(--on-surface);
+            border: 1px solid var(--outline-subtle);
+            font-size: 0.82rem;
+            cursor: pointer;
+            outline: none;
+        }
+        .sim-controls select:focus {
+            border-color: var(--primary);
+        }
+        .sim-value {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.88rem;
+            min-width: 50px;
+            display: inline-block;
+            font-family: var(--font-mono);
+        }
+
+        /* ===== STEP CONTROLS ===== */
+        .step-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+        .step-controls button {
+            padding: 8px 16px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--outline-subtle);
+            background: var(--surface2);
+            color: var(--on-surface);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            letter-spacing: 0.02em;
+        }
+        .step-controls button:hover {
+            background: var(--surface3);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .step-controls button.active-step {
+            background: var(--primary);
+            color: var(--on-primary);
+            border-color: var(--primary);
+        }
+        .step-controls .speed-select {
+            padding: 7px 10px;
+            border-radius: var(--radius-xl);
+            background: var(--surface2);
+            color: var(--on-surface);
+            border: 1px solid var(--outline-subtle);
+            font-size: 0.78rem;
+            cursor: pointer;
+            outline: none;
+        }
+        .step-indicator {
+            font-size: 0.82rem;
+            color: var(--on-surface2);
+            font-weight: 500;
+            margin: 0 8px;
+            font-family: var(--font-mono);
+        }
+        .step-description {
+            text-align: center;
+            color: var(--on-surface2);
+            font-size: 0.84rem;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        .svg-diagram {
+            width: 100%;
+            max-width: 650px;
+            display: block;
+            margin: 10px auto;
+        }
+        .legend-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 8px 0;
+            font-size: 0.76rem;
+            color: var(--on-surface2);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                left: -300px;
+                top: 0;
+                bottom: 0;
+                transition: left var(--transition);
+                z-index: 100;
+            }
+            #sidebar.open {
+                left: 0;
+            }
+            #main-content {
+                padding: 14px 12px 30px;
+            }
+            #menu-toggle {
+                display: flex !important;
+            }
+            .sim-controls {
+                gap: 8px;
+            }
+            .sim-controls input[type="range"] {
+                width: 80px;
+            }
+            .math-block {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+            }
+        }
+        #menu-toggle {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 110;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--outline-subtle);
+            color: var(--on-surface);
+            font-size: 1.2rem;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 95;
+        }
+        #overlay.show {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes flowRight {
+            0% {
+                transform: translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(18px);
+                opacity: 0;
+            }
+        }
+        @keyframes flowUp {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+        }
+        @keyframes bubbleUp {
+            0% {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.5);
+            }
+        }
+        .anim-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .anim-glow {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        .anim-flow-x {
+            animation: flowRight 1.5s ease-out infinite;
+        }
+        .anim-flow-up {
+            animation: flowUp 1.5s ease-out infinite;
+        }
+        .anim-bubble {
+            animation: bubbleUp 2s ease-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="menu-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside id="sidebar">
+        <div id="sidebar-header">
+            <div class="logo-icon">RE</div>
+            <div>
+                <h2>Renewable Energy</h2>
+                <div class="subtitle">Interactive Study Guide</div>
+            </div>
+        </div>
+        <div id="search-box">
+            <input type="text" id="search-input" placeholder="Search questions..." oninput="filterNav()">
+        </div>
+        <ul id="nav-list">
+            <li class="nav-category">Wind Energy</li>
+            <li><a data-q="q1" onclick="selectQuestion('q1')"><span class="q-badge">1</span><span class="q-title">HAWT Optimal Rotational Speed</span></a></li>
+            <li><a data-q="q5" onclick="selectQuestion('q5')"><span class="q-badge">5</span><span class="q-title">Cp-&#955; &amp; Power-Wind Speed Curves</span></a></li>
+            <li><a data-q="q6" onclick="selectQuestion('q6')"><span class="q-badge">6</span><span class="q-title">Wind Turbine Types &amp; Betz Limit</span></a></li>
+            <li><a data-q="q7" onclick="selectQuestion('q7')"><span class="q-badge">7</span><span class="q-title">Day/Night Energy Fraction</span></a></li>
+            <li><a data-q="q12" onclick="selectQuestion('q12')"><span class="q-badge">12</span><span class="q-title">Wind Power &amp; Thrust Calculation</span></a></li>
+            <li><a data-q="q13" onclick="selectQuestion('q13')"><span class="q-badge">13</span><span class="q-title">TSR vs Solidity</span></a></li>
+            <li><a data-q="q19" onclick="selectQuestion('q19')"><span class="q-badge">19</span><span class="q-title">TSR &amp; Solidity in Design</span></a></li>
+            <li><a data-q="q20" onclick="selectQuestion('q20')"><span class="q-badge">20</span><span class="q-title">400 kW Turbine Analysis</span></a></li>
+            <li><a data-q="q23" onclick="selectQuestion('q23')"><span class="q-badge">23</span><span class="q-title">Cp-&#955; Curves (Repeat)</span></a></li>
+
+            <li class="nav-category">Solar Photovoltaics</li>
+            <li><a data-q="q2" onclick="selectQuestion('q2')"><span class="q-badge">2</span><span class="q-title">PV Cell Types &amp; I-V / P-V Curves</span></a></li>
+            <li><a data-q="q14" onclick="selectQuestion('q14')"><span class="q-badge">14</span><span class="q-title">I-V &amp; P-V with Temp &amp; Irradiance</span></a></li>
+            <li><a data-q="q16" onclick="selectQuestion('q16')"><span class="q-badge">16</span><span class="q-title">PV Module Sizing for DC Motor</span></a></li>
+            <li><a data-q="q17" onclick="selectQuestion('q17')"><span class="q-badge">17</span><span class="q-title">MPPT Power Gain &amp; Payback</span></a></li>
+            <li><a data-q="q18" onclick="selectQuestion('q18')"><span class="q-badge">18</span><span class="q-title">Fill Factor Definition</span></a></li>
+            <li><a data-q="q21" onclick="selectQuestion('q21')"><span class="q-badge">21</span><span class="q-title">Solar Cell Equivalent Circuit</span></a></li>
+
+            <li class="nav-category">Solar Thermal</li>
+            <li><a data-q="q3" onclick="selectQuestion('q3')"><span class="q-badge">3</span><span class="q-title">Concentration Ratio &amp; Hybrid Systems</span></a></li>
+            <li><a data-q="q4" onclick="selectQuestion('q4')"><span class="q-badge">4</span><span class="q-title">Parabolic Trough CR Calculation</span></a></li>
+            <li><a data-q="q15" onclick="selectQuestion('q15')"><span class="q-badge">15</span><span class="q-title">Solar Collectors — Working &amp; Applications</span></a></li>
+            <li><a data-q="q22" onclick="selectQuestion('q22')"><span class="q-badge">22</span><span class="q-title">Radiation Measurement Instruments</span></a></li>
+            <li><a data-q="q24" onclick="selectQuestion('q24')"><span class="q-badge">24</span><span class="q-title">Solar Collectors (Repeat)</span></a></li>
+
+            <li class="nav-category">Bioenergy &amp; Fuel Cells</li>
+            <li><a data-q="q10" onclick="selectQuestion('q10')"><span class="q-badge">10</span><span class="q-title">Fuel Cell Types &amp; PEMFC Working</span></a></li>
+            <li><a data-q="q11" onclick="selectQuestion('q11')"><span class="q-badge">11</span><span class="q-title">Biogas &amp; Fixed-Dome Plant</span></a></li>
+            <li><a data-q="q26" onclick="selectQuestion('q26')"><span class="q-badge">26</span><span class="q-title">Biogas Working Principle (Repeat)</span></a></li>
+            <li><a data-q="q27" onclick="selectQuestion('q27')"><span class="q-badge">27</span><span class="q-title">Short Notes — 5 Topics</span></a></li>
+
+            <li class="nav-category">General &amp; Miscellaneous</li>
+            <li><a data-q="q8" onclick="selectQuestion('q8')"><span class="q-badge">8</span><span class="q-title">Local Apparent Time Calculation</span></a></li>
+            <li><a data-q="q9" onclick="selectQuestion('q9')"><span class="q-badge">9</span><span class="q-title">Distributed vs Dispersed Generation</span></a></li>
+            <li><a data-q="q25" onclick="selectQuestion('q25')"><span class="q-badge">25</span><span class="q-title">PV Hybrid Systems Overview</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main id="main-content">
+        <div id="default-message" style="text-align:center;padding:60px 20px;color:var(--on-surface2);">
+            <div style="font-size:3.5rem;margin-bottom:16px;font-family:var(--font-mono);color:var(--primary);">&Delta;E</div>
+            <h2 style="color:var(--on-surface);margin-bottom:8px;font-weight:600;">Renewable Energy Study Guide</h2>
+            <p style="font-size:0.9rem;">Select a question from the sidebar to view its solution with interactive simulations.</p>
+            <p style="font-size:0.78rem;margin-top:6px;color:var(--outline);">Questions marked with <span style="color:var(--primary);">&#9679;</span> include interactive graphs or animated diagrams.</p>
+        </div>
+
+        <div id="q1-container" class="q-container" style="display:none;"></div>
+        <div id="q2-container" class="q-container" style="display:none;"></div>
+        <div id="q3-container" class="q-container" style="display:none;"></div>
+        <div id="q4-container" class="q-container" style="display:none;"></div>
+        <div id="q5-container" class="q-container" style="display:none;"></div>
+        <div id="q6-container" class="q-container" style="display:none;"></div>
+        <div id="q7-container" class="q-container" style="display:none;"></div>
+        <div id="q8-container" class="q-container" style="display:none;"></div>
+        <div id="q9-container" class="q-container" style="display:none;"></div>
+        <div id="q10-container" class="q-container" style="display:none;"></div>
+        <div id="q11-container" class="q-container" style="display:none;"></div>
+        <div id="q12-container" class="q-container" style="display:none;"></div>
+        <div id="q13-container" class="q-container" style="display:none;"></div>
+        <div id="q14-container" class="q-container" style="display:none;"></div>
+        <div id="q15-container" class="q-container" style="display:none;"></div>
+        <div id="q16-container" class="q-container" style="display:none;"></div>
+        <div id="q17-container" class="q-container" style="display:none;"></div>
+        <div id="q18-container" class="q-container" style="display:none;"></div>
+        <div id="q19-container" class="q-container" style="display:none;"></div>
+        <div id="q20-container" class="q-container" style="display:none;"></div>
+        <div id="q21-container" class="q-container" style="display:none;"></div>
+        <div id="q22-container" class="q-container" style="display:none;"></div>
+        <div id="q23-container" class="q-container" style="display:none;"></div>
+        <div id="q24-container" class="q-container" style="display:none;"></div>
+        <div id="q25-container" class="q-container" style="display:none;"></div>
+        <div id="q26-container" class="q-container" style="display:none;"></div>
+        <div id="q27-container" class="q-container" style="display:none;"></div>
+    </main>
+
+    <script>
+        let activeQuestion = null;
+        let animationIntervals = {};
+        let currentSteps = {};
+        let autoPlayTimers = {};
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        }
+
+        function filterNav() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            document.querySelectorAll('#nav-list li a').forEach(a => {
+                const li = a.parentElement;
+                li.style.display = a.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+            document.querySelectorAll('.nav-category').forEach(cat => {
+                let vis = false;
+                let n = cat.nextElementSibling;
+                while (n && !n.classList.contains('nav-category')) {
+                    if (n.style.display !== 'none') vis = true;
+                    n = n.nextElementSibling;
+                }
+                cat.style.display = vis || !q ? '' : 'none';
+            });
+        }
+
+        function selectQuestion(qId) {
+            document.querySelectorAll('.q-container').forEach(c => c.style.display = 'none');
+            document.getElementById('default-message').style.display = 'none';
+            Object.values(autoPlayTimers).forEach(t => clearInterval(t));
+            autoPlayTimers = {};
+            Object.values(animationIntervals).forEach(t => clearInterval(t));
+            animationIntervals = {};
+            const container = document.getElementById(qId + '-container');
+            if (container) {
+                container.style.display = 'block';
+                buildQuestionContent(qId, container);
+            }
+            document.querySelectorAll('#nav-list li a').forEach(a => a.classList.remove('active'));
+            const link = document.querySelector(`[data-q="${qId}"]`);
+            if (link) link.classList.add('active');
+            activeQuestion = qId;
+            document.getElementById('main-content').scrollTop = 0;
+            closeSidebar();
+        }
+
+        function buildQuestionContent(qId, container) {
+            container.innerHTML = '';
+            switch (qId) {
+                case 'q1':
+                    buildQ1(container);
+                    break;
+                case 'q2':
+                    buildQ2(container);
+                    break;
+                case 'q3':
+                    buildQ3(container);
+                    break;
+                case 'q4':
+                    buildQ4(container);
+                    break;
+                case 'q5':
+                    buildQ5(container);
+                    break;
+                case 'q6':
+                    buildQ6(container);
+                    break;
+                case 'q7':
+                    buildQ7(container);
+                    break;
+                case 'q8':
+                    buildQ8(container);
+                    break;
+                case 'q9':
+                    buildQ9(container);
+                    break;
+                case 'q10':
+                    buildQ10(container);
+                    break;
+                case 'q11':
+                    buildQ11(container);
+                    break;
+                case 'q12':
+                    buildQ12(container);
+                    break;
+                case 'q13':
+                    buildQ13(container);
+                    break;
+                case 'q14':
+                    buildQ14(container);
+                    break;
+                case 'q15':
+                    buildQ15(container);
+                    break;
+                case 'q16':
+                    buildQ16(container);
+                    break;
+                case 'q17':
+                    buildQ17(container);
+                    break;
+                case 'q18':
+                    buildQ18(container);
+                    break;
+                case 'q19':
+                    buildQ19(container);
+                    break;
+                case 'q20':
+                    buildQ20(container);
+                    break;
+                case 'q21':
+                    buildQ21(container);
+                    break;
+                case 'q22':
+                    buildQ22(container);
+                    break;
+                case 'q23':
+                    buildQ23(container);
+                    break;
+                case 'q24':
+                    buildQ24(container);
+                    break;
+                case 'q25':
+                    buildQ25(container);
+                    break;
+                case 'q26':
+                    buildQ26(container);
+                    break;
+                case 'q27':
+                    buildQ27(container);
+                    break;
+                default:
+                    container.innerHTML =
+                        '<p style="color:var(--on-surface2);padding:40px;text-align:center;">Content not found.</p>';
+            }
+            setTimeout(() => initInteractive(qId, container), 100);
+        }
+
+        function addHeader(container, num, title, marks, repeated) {
+            const h = document.createElement('div');
+            h.className = 'q-header';
+            h.innerHTML = `
+            <h1>Q${num}. ${title}</h1>
+            <div class="q-meta"><span>Marks: ${marks}</span><span>Repeated: ${repeated} time${repeated>1?'s':''}</span></div>`;
+            container.appendChild(h);
+        }
+
+        function addCard(container, title, html) {
+            const c = document.createElement('div');
+            c.className = 'card';
+            c.innerHTML = title ? `<h3>${title}</h3>${html}` : html;
+            container.appendChild(c);
+            return c;
+        }
+
+        // ==================== Q1 ====================
+        function buildQ1(container) {
+            addHeader(container, 1, 'HAWT Rotational Speed for Optimal Energy Extraction', 4, 2);
+            addCard(container, 'Solution', `
+            <p>For maximum power, a wind turbine must operate near its <strong>optimum tip-speed ratio</strong> (TSR). The TSR relates blade-tip speed to wind speed.</p>
+            <div class="math-block"><span class="var">&#955;</span> <span class="op">=</span> <span class="var">&#969; R</span> <span class="op">/</span> <span class="var">v</span></div>
+            <p>where <span class="var" style="font-style:italic;">&#969;</span> = angular speed (rad/s), <span class="var" style="font-style:italic;">R</span> = rotor radius, <span class="var" style="font-style:italic;">v</span> = wind speed.</p>
+            <p>For a <strong>3-blade HAWT</strong>, optimum <span class="var" style="font-style:italic;">&#955;</span> &asymp; <strong>6</strong>.</p>
+            <p><strong>Worked Example:</strong> <span class="var">v</span> = 12 m/s, <span class="var">D</span> = 70 m &rarr; <span class="var">R</span> = 35 m</p>
+            <div class="math-block"><span class="var">&#969;</span> <span class="op">=</span> <span class="num">(6 &#215; 12)</span> <span class="op">/</span> <span class="num">35</span> <span class="op">=</span> <span class="num">2.057</span> <span class="unit">rad/s</span><br><span class="var">N</span> <span class="op">=</span> <span class="num">(2.057 &#215; 60)</span> <span class="op">/</span> <span class="num">(2&#960;)</span> <span class="op">&asymp;</span> <span class="num">19.6</span> <span class="unit">rpm</span></div>
+            <div class="result-block">Final: <span class="var">&#969;</span> &asymp; 2.06 rad/s &nbsp;|&nbsp; <span class="var">N</span> &asymp; 20 rpm</div>
+            <p style="color:var(--on-surface2);">The blades must turn at just the right speed — not too slow, not too fast — to capture the maximum wind power.</p>
+          `);
+            addCard(container, 'Interactive Calculator', `
+            <div class="sim-controls">
+              <label>Wind Speed v (m/s): <input type="range" id="q1-windspeed" min="5" max="25" value="12" step="0.5" oninput="updateQ1()"> <span class="sim-value" id="q1-v-val">12</span></label>
+              <label>Rotor Diameter D (m): <input type="range" id="q1-diameter" min="20" max="120" value="70" step="1" oninput="updateQ1()"> <span class="sim-value" id="q1-d-val">70</span></label>
+              <label>Tip-Speed Ratio &#955;: <input type="range" id="q1-tsr" min="3" max="10" value="6" step="0.1" oninput="updateQ1()"> <span class="sim-value" id="q1-tsr-val">6.0</span></label>
+            </div>
+            <div class="result-block" id="q1-result">&#969; = 2.057 rad/s &nbsp;|&nbsp; N = 19.6 rpm</div>
+          `);
+        }
+
+        function updateQ1() {
+            const v = +document.getElementById('q1-windspeed').value;
+            const D = +document.getElementById('q1-diameter').value;
+            const lambda = +document.getElementById('q1-tsr').value;
+            document.getElementById('q1-v-val').textContent = v;
+            document.getElementById('q1-d-val').textContent = D;
+            document.getElementById('q1-tsr-val').textContent = lambda.toFixed(1);
+            const R = D / 2;
+            const omega = (lambda * v) / R;
+            const N = (omega * 60) / (2 * Math.PI);
+            document.getElementById('q1-result').innerHTML =
+                `<span class="var">&#969;</span> = <strong>${omega.toFixed(3)}</strong> rad/s &nbsp;|&nbsp; <span class="var">N</span> = <strong>${N.toFixed(1)}</strong> rpm`;
+        }
+
+        // ==================== Q2: PV Curves ====================
+        function buildQ2(container) {
+            addHeader(container, 2, 'Types of Solar PV Cells & I-V / P-V Characteristics', 6, 2);
+            addCard(container, 'PV Cell Types by Material', `
+            <table>
+              <tr><th>Type</th><th>Material</th><th>Typical Efficiency</th></tr>
+              <tr><td>Monocrystalline Si</td><td>Single crystal silicon</td><td>18 – 22%</td></tr>
+              <tr><td>Polycrystalline Si</td><td>Multiple silicon crystals</td><td>15 – 18%</td></tr>
+              <tr><td>Thin-Film (a-Si, CdTe, CIGS)</td><td>Thin semiconductor layer</td><td>10 – 14%</td></tr>
+              <tr><td>Multi-junction</td><td>Stacked layers with different band-gaps</td><td>30%+</td></tr>
+            </table>
+          `);
+            addCard(container, 'I-V & P-V Curve Simulator', `
+            <div class="sim-controls">
+              <label>Temperature T (&deg;C): <input type="range" id="q2-temp" min="-10" max="75" value="25" step="1" oninput="drawPVCurves()"> <span class="sim-value" id="q2-temp-val">25</span></label>
+              <label>Irradiance G (W/m&sup2;): <input type="range" id="q2-irr" min="200" max="1000" value="800" step="10" oninput="drawPVCurves()"> <span class="sim-value" id="q2-irr-val">800</span></label>
+            </div>
+            <div class="graph-container"><canvas id="q2-canvas" width="700" height="420"></canvas></div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#60a5fa;"></span> I-V Curve</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span> P-V Curve</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#ff6b6b;"></span> Maximum Power Point (MPP)</span>
+            </div>
+            <div class="result-block" id="q2-mpp-info">Adjust sliders to calculate MPP.</div>
+          `);
+        }
+
+        // ==================== Q3 ====================
+        function buildQ3(container) {
+            addHeader(container, 3, 'Concentration Ratio & PV Hybrid Systems', '3 + 5', 1);
+            addCard(container, '(a) Concentration Ratio of Parabolic Trough', `
+            <div class="math-block"><span class="var">CR</span> <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="fn">sin</span>(<span class="var">&#952;&#8336;</span>)<br><span class="fn">sin</span>(20&deg;) <span class="op">=</span> <span class="num">0.342</span><br><span class="var">CR</span> <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="num">0.342</span> <span class="op">&asymp;</span> <span class="num">2.92</span></div>
+            <p>The collector concentrates sunlight to approximately <strong>3&times;</strong> normal intensity.</p>
+          `);
+            addCard(container, '(b) PV Hybrid Systems', `
+            <p>Solar panels combined with other power sources for improved reliability:</p>
+            <ul><li><strong>PV + Wind</strong> — wind supplies power when sunlight is weak or at night</li>
+            <li><strong>PV + Battery</strong> — stores excess solar energy for later use</li>
+            <li><strong>PV + Diesel</strong> — diesel generator acts as backup</li>
+            <li><strong>PV + Fuel Cell</strong> — clean backup using hydrogen</li></ul>
+            <p>Hybrid systems ensure a more stable and continuous electricity supply.</p>
+          `);
+        }
+
+        // ==================== Q4 ====================
+        function buildQ4(container) {
+            addHeader(container, 4, 'Parabolic Trough Concentration Ratio', 3, 2);
+            addCard(container, 'Solution', `
+            <div class="math-block"><span class="var">CR</span> <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="fn">sin</span>(20&deg;) <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="num">0.342</span> <span class="op">&asymp;</span> <span class="num">2.92</span> <span class="op">&asymp;</span> <span class="num">3</span></div>
+            <p>Identical to Q3(a). The concentration ratio is approximately 3.</p>
+          `);
+        }
+
+        // ==================== Q5: Cp-Lambda + Power Curve ====================
+        function buildQ5(container) {
+            addHeader(container, 5, 'Cp-&#955; Curve & Output Power vs Wind Speed', 5, 3);
+            addCard(container, 'Power Coefficient Cp vs Tip-Speed Ratio &#955;', `
+            <div class="sim-controls">
+              <label>Rotor Type:
+                <select id="q5-rotor" onchange="drawCpLambda()">
+                  <option value="hawt3">3-Blade HAWT</option>
+                  <option value="hawt2">2-Blade HAWT</option>
+                  <option value="savonius">Savonius VAWT</option>
+                  <option value="darrieus">Darrieus VAWT</option>
+                </select>
+              </label>
+            </div>
+            <div class="graph-container"><canvas id="q5-cp-canvas" width="700" height="380"></canvas></div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#59d669;"></span> Cp (Power Coefficient)</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span> Maximum Cp</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#ff6b6b;width:100%;height:1px;border-radius:0;"></span> Betz Limit (0.593)</span>
+            </div>
+          `);
+            addCard(container, 'Output Power vs Wind Speed', `
+            <div class="sim-controls">
+              <label>Rated Power P<sub>rated</sub> (kW): <input type="range" id="q5-rated" min="50" max="2000" value="400" step="10" oninput="drawPowerCurve()"> <span class="sim-value" id="q5-rated-val">400</span></label>
+              <label>Rated Wind Speed v<sub>rated</sub> (m/s): <input type="range" id="q5-vrated" min="8" max="20" value="15" step="0.5" oninput="drawPowerCurve()"> <span class="sim-value" id="q5-vrated-val">15</span></label>
+            </div>
+            <div class="graph-container"><canvas id="q5-power-canvas" width="700" height="360"></canvas></div>
+          `);
+        }
+
+        // ==================== Q6 ====================
+        function buildQ6(container) {
+            addHeader(container, 6, 'Wind Turbine Types & Betz Limit Derivation', 5, 3);
+            addCard(container, 'Types of Wind Turbines', `
+            <ul><li><strong>HAWT</strong> (Horizontal Axis) — most common, 2–3 blades, rotor faces wind</li>
+            <li><strong>VAWT</strong> (Vertical Axis) — Savonius (drag-type), Darrieus (lift-type)</li>
+            <li><strong>Upwind</strong> — wind hits rotor before tower</li>
+            <li><strong>Downwind</strong> — wind passes tower first, then rotor</li></ul>
+          `);
+            addCard(container, 'Betz Limit Derivation', `
+            <div class="math-block"><span class="var">P</span><sub>wind</sub> <span class="op">=</span> <span class="num">&frac12;</span> <span class="var">&#961; A v</span><sup>3</sup><br><span class="var">C<sub>p</sub></span> <span class="op">=</span> <span class="num">4</span><span class="var">a</span>(<span class="num">1</span> <span class="op">-</span> <span class="var">a</span>)<sup>2</sup><br><span class="fn">d</span><span class="var">C<sub>p</sub></span><span class="op">/</span><span class="fn">d</span><span class="var">a</span> <span class="op">=</span> <span class="num">0</span> <span class="op">&rarr;</span> <span class="var">a</span> <span class="op">=</span> <span class="num">1/3</span><br><span class="var">C<sub>p,max</sub></span> <span class="op">=</span> <span class="num">4</span> <span class="op">&#215;</span> <span class="num">(1/3)</span> <span class="op">&#215;</span> <span class="num">(2/3)</span><sup>2</sup> <span class="op">=</span> <span class="num">16/27</span> <span class="op">&asymp;</span> <span class="num">0.593</span></div>
+            <div class="result-block">A turbine can extract at most <strong>59.3%</strong> of the available wind power — this is the Betz Limit.</div>
+            <p style="color:var(--on-surface2);">The turbine must allow some air to pass through; it cannot stop all the wind, otherwise airflow would cease and no power could be extracted.</p>
+          `);
+        }
+
+        // ==================== Q7 ====================
+        function buildQ7(container) {
+            addHeader(container, 7, 'Day/Night Energy Fraction', 4, 1);
+            addCard(container, 'Solution', `
+            <div class="math-block"><span class="var">E</span> <span class="op">&#8733;</span> <span class="var">v</span><sup>3</sup><br><span class="var">f</span><sub>day</sub> <span class="op">=</span> <span class="num">15</span><sup>3</sup> <span class="op">/</span> (<span class="num">15</span><sup>3</sup> <span class="op">+</span> <span class="num">10</span><sup>3</sup>) <span class="op">=</span> <span class="num">3375</span> <span class="op">/</span> <span class="num">4375</span> <span class="op">=</span> <span class="num">0.7714</span></div>
+            <div class="result-block">Approximately <strong>77.1%</strong> of total daily energy is produced during daytime.</div>
+            <p style="color:var(--on-surface2);">Because wind speed is much higher during the day, the energy produced is disproportionately larger — power scales with the cube of velocity.</p>
+          `);
+        }
+
+        // ==================== Q8 ====================
+        function buildQ8(container) {
+            addHeader(container, 8, 'Local Apparent Time Calculation', 4, 1);
+            addCard(container, 'Converting IST to Local Apparent Time', `
+            <div class="math-block"><span class="var">&#916;&#955;</span> <span class="op">=</span> <span class="num">85.743&deg;</span> <span class="op">-</span> <span class="num">82.5&deg;</span> <span class="op">=</span> <span class="num">3.243&deg;</span><br><span class="var">t</span><sub>long</sub> <span class="op">=</span> <span class="num">3.243</span> <span class="op">&#215;</span> <span class="num">4</span> <span class="op">=</span> <span class="num">+12.972</span> <span class="unit">min</span><br><span class="var">t</span><sub>EoT</sub> <span class="op">=</span> <span class="num">-13.5</span> <span class="unit">min</span><br><span class="var">&#916;t</span><sub>net</sub> <span class="op">=</span> <span class="num">+12.972</span> <span class="op">-</span> <span class="num">13.5</span> <span class="op">=</span> <span class="num">-0.528</span> <span class="unit">min</span><br><span class="var">LAT</span> <span class="op">&asymp;</span> <span class="num">14:29:30</span></div>
+            <div class="result-block">Local apparent time is approximately <strong>14:29:30</strong> — only about 30 seconds behind IST.</div>
+          `);
+        }
+
+        // ==================== Q9 ====================
+        function buildQ9(container) {
+            addHeader(container, 9, 'Distributed Generation vs Dispersed Generation', 2, 1);
+            addCard(container, 'Comparison', `
+            <table>
+              <tr><th>Aspect</th><th>Distributed Generation</th><th>Dispersed Generation</th></tr>
+              <tr><td>Scale</td><td>kW to MW range</td><td>Typically &lt; 0.5 MW</td></tr>
+              <tr><td>Grid Connection</td><td>Usually connected to distribution grid</td><td>May be local or off-grid</td></tr>
+              <tr><td>Example</td><td>Rooftop solar, biomass plant, local wind</td><td>Home solar kit, small standalone unit</td></tr>
+            </table>
+            <p style="color:var(--on-surface2);">Both are forms of local generation, but dispersed generation is more scattered and typically smaller in scale.</p>
+          `);
+        }
+
+        // ==================== Q10: PEMFC Animation ====================
+        function buildQ10(container) {
+            addHeader(container, 10, 'Fuel Cell Definition, Types & PEMFC Working', 4, 1);
+            addCard(container, 'Fuel Cell Types', `
+            <ul><li><strong>PEMFC</strong> — Proton Exchange Membrane Fuel Cell</li>
+            <li><strong>SOFC</strong> — Solid Oxide Fuel Cell</li>
+            <li><strong>PAFC</strong> — Phosphoric Acid Fuel Cell</li>
+            <li><strong>MCFC</strong> — Molten Carbonate Fuel Cell</li>
+            <li><strong>AFC</strong> — Alkaline Fuel Cell</li>
+            <li><strong>DMFC</strong> — Direct Methanol Fuel Cell</li></ul>
+          `);
+            addCard(container, 'PEMFC Animated Working Principle', `
+            <div class="step-controls">
+              <button id="q10-prev" onclick="stepAnim('q10',-1)">&#9664; Prev</button>
+              <span class="step-indicator" id="q10-step-indicator">Step 1 / 5</span>
+              <button id="q10-next" onclick="stepAnim('q10',1)">Next &#9654;</button>
+              <button id="q10-auto" onclick="toggleAuto('q10')">&#9654; Auto-Play</button>
+              <select class="speed-select" id="q10-speed" onchange="updateSpeed('q10')">
+                <option value="2000">Slow</option><option value="1200" selected>Normal</option><option value="600">Fast</option>
+              </select>
+            </div>
+            <div style="text-align:center;">
+              <svg class="svg-diagram" id="q10-svg" viewBox="0 0 600 300" style="max-width:600px;background:var(--surface2);border-radius:12px;">
+                <rect x="20" y="60" width="120" height="180" rx="10" fill="#1a2d1a" stroke="#59d669" stroke-width="2"/>
+                <text x="80" y="48" text-anchor="middle" fill="#59d669" font-size="12" font-weight="600">ANODE (&minus;)</text>
+                <text x="80" y="155" text-anchor="middle" fill="#dce4da" font-size="10">2H&#8322; &rarr; 4H&#8314; + 4e&#8315;</text>
+                <rect x="140" y="65" width="30" height="170" rx="4" fill="#3a6b3a" stroke="#59d669" stroke-width="2"/>
+                <text x="155" y="48" text-anchor="middle" fill="#59d669" font-size="9">PEM</text>
+                <text x="155" y="155" text-anchor="middle" fill="#dce4da" font-size="8">H&#8314;&rarr;</text>
+                <rect x="170" y="60" width="120" height="180" rx="10" fill="#1a2d1a" stroke="#60a5fa" stroke-width="2"/>
+                <text x="230" y="48" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="600">CATHODE (+)</text>
+                <text x="230" y="150" text-anchor="middle" fill="#dce4da" font-size="9">O&#8322; + 4H&#8314; + 4e&#8315; &rarr; 2H&#8322;O</text>
+                <path d="M20,60 L20,25 L290,25 L290,60" fill="none" stroke="#f0c040" stroke-width="2.5"/>
+                <text x="155" y="17" text-anchor="middle" fill="#f0c040" font-size="10">e&#8315; flow &rarr; Electricity</text>
+                <text x="80" y="260" text-anchor="middle" fill="#59d669" font-size="9">H&#8322; Inlet</text>
+                <text x="230" y="260" text-anchor="middle" fill="#60a5fa" font-size="9">O&#8322; Inlet</text>
+                <text x="230" y="272" text-anchor="middle" fill="#7dd4bd" font-size="8">H&#8322;O Out</text>
+                <g id="q10-particles"></g>
+              </svg>
+            </div>
+            <p class="step-description" id="q10-desc">Step 1: Hydrogen (H&#8322;) is supplied at the anode.</p>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#59d669;"></span> Hydrogen H&#8322;</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span> Electrons e&#8315;</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#60a5fa;"></span> Oxygen O&#8322;</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#7dd4bd;"></span> Water H&#8322;O</span>
+            </div>
+          `);
+            currentSteps['q10'] = 1;
+        }
+
+        // ==================== Q11: Biogas ====================
+        function buildQ11(container) {
+            addHeader(container, 11, 'Biogas & Fixed-Dome Biogas Plant', 6, 3);
+            addCard(container, 'What is Biogas?',
+                '<p>Biogas is a methane-rich fuel gas produced by <strong>anaerobic digestion</strong> of organic waste. It primarily contains <strong>CH&#8324;</strong> (methane) and <strong>CO&#8322;</strong> (carbon dioxide).</p>'
+                );
+            addCard(container, 'Animated Biogas Plant Working', `
+            <div class="step-controls">
+              <button id="q11-prev" onclick="stepAnim('q11',-1)">&#9664; Prev</button>
+              <span class="step-indicator" id="q11-step-indicator">Step 1 / 5</span>
+              <button id="q11-next" onclick="stepAnim('q11',1)">Next &#9654;</button>
+              <button id="q11-auto" onclick="toggleAuto('q11')">&#9654; Auto-Play</button>
+              <select class="speed-select" id="q11-speed" onchange="updateSpeed('q11')">
+                <option value="2500">Slow</option><option value="1500" selected>Normal</option><option value="800">Fast</option>
+              </select>
+            </div>
+            <div style="text-align:center;">
+              <svg class="svg-diagram" id="q11-svg" viewBox="0 0 600 380" style="max-width:650px;background:var(--surface2);border-radius:12px;">
+                <rect x="0" y="280" width="600" height="100" fill="#1a2d1a" stroke="#3a4a38" stroke-width="1"/>
+                <text x="300" y="310" text-anchor="middle" fill="#6a7a68" font-size="10">GROUND LEVEL</text>
+                <ellipse cx="300" cy="240" rx="160" ry="100" fill="#1b2a1d" stroke="#59d669" stroke-width="2.5"/>
+                <path d="M140,240 Q300,100 460,240" fill="#223524" stroke="#59d669" stroke-width="2.5"/>
+                <rect x="60" y="140" width="50" height="120" rx="6" fill="#2a3a2a" stroke="#f0c040" stroke-width="1.5"/>
+                <text x="85" y="120" text-anchor="middle" fill="#f0c040" font-size="9">INLET</text>
+                <rect x="490" y="200" width="50" height="80" rx="6" fill="#2a3a2a" stroke="#ff6b6b" stroke-width="1.5"/>
+                <text x="515" y="190" text-anchor="middle" fill="#ff6b6b" font-size="9">OUTLET</text>
+                <line x1="300" y1="140" x2="300" y2="70" stroke="#f0c040" stroke-width="3"/>
+                <rect x="280" y="55" width="40" height="20" rx="4" fill="#f0c040" opacity="0.7"/>
+                <text x="300" y="42" text-anchor="middle" fill="#f0c040" font-size="9">GAS PIPE</text>
+                <ellipse cx="300" cy="205" rx="80" ry="40" fill="#f0c040" opacity="0.35" id="q11-gas-pocket"/>
+                <text x="300" y="208" text-anchor="middle" fill="#f0c040" font-size="9" id="q11-gas-label">BIOGAS</text>
+                <rect x="170" y="220" width="260" height="50" rx="15" fill="#5a4a2a" opacity="0.6" id="q11-slurry"/>
+                <text x="300" y="248" text-anchor="middle" fill="#dce4da" font-size="10" id="q11-slurry-label">Slurry (organic waste)</text>
+                <g id="q11-anim-group"></g>
+              </svg>
+            </div>
+            <p class="step-description" id="q11-desc">Step 1: Organic waste slurry is fed through the inlet pipe into the digester.</p>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span> Biogas (CH&#8324; + CO&#8322;)</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#5a4a2a;"></span> Slurry</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#59d669;"></span> Digester Wall</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#ff6b6b;"></span> Spent Slurry</span>
+            </div>
+          `);
+            addCard(container, 'Fixed-Dome vs Floating-Drum', `
+            <table>
+              <tr><th>Aspect</th><th>Fixed-Dome Plant</th><th>Floating-Drum Plant</th></tr>
+              <tr><td>Construction</td><td>Brick/concrete dome</td><td>Metal drum that moves up/down</td></tr>
+              <tr><td>Cost</td><td>Lower</td><td>Higher (steel drum)</td></tr>
+              <tr><td>Gas Pressure</td><td>Varies with gas volume</td><td>More constant</td></tr>
+              <tr><td>Maintenance</td><td>Harder to repair leaks</td><td>Drum can rust; gas level visible</td></tr>
+              <tr><td>Durability</td><td>Long-lasting</td><td>Requires corrosion control</td></tr>
+            </table>
+          `);
+            currentSteps['q11'] = 1;
+        }
+
+        // ==================== Q12 ====================
+        function buildQ12(container) {
+            addHeader(container, 12, 'Wind Turbine Power & Thrust Calculation', 5, 1);
+            addCard(container, 'Solution (v = 15 m/s, D = 10 m, Cp = 0.45, &#961; = 1.226 kg/m&sup3;)', `
+            <div class="math-block"><span class="var">A</span> <span class="op">=</span> <span class="num">&#960;(5)</span><sup>2</sup> <span class="op">=</span> <span class="num">78.54</span> <span class="unit">m&sup2;</span><br><span class="var">p</span><sub>wind</sub> <span class="op">=</span> <span class="num">&frac12; &#961; v</span><sup>3</sup> <span class="op">=</span> <span class="num">2068.1</span> <span class="unit">W/m&sup2;</span><br><span class="var">p</span><sub>max</sub> <span class="op">=</span> <span class="num">2068.1 &#215; 0.593</span> <span class="op">=</span> <span class="num">1227.1</span> <span class="unit">W/m&sup2;</span><br><span class="var">p</span><sub>actual</sub> <span class="op">=</span> <span class="num">2068.1 &#215; 0.45</span> <span class="op">=</span> <span class="num">930.6</span> <span class="unit">W/m&sup2;</span><br><span class="var">P</span><sub>out</sub> <span class="op">=</span> <span class="num">930.6 &#215; 78.54</span> <span class="op">&asymp;</span> <span class="num">73.1</span> <span class="unit">kW</span><br><span class="var">T</span> <span class="op">&asymp;</span> <span class="num">2P/v</span> <span class="op">&asymp;</span> <span class="num">9.73</span> <span class="unit">kN</span></div>
+          `);
+            addCard(container, 'Interactive Calculator', `
+            <div class="sim-controls">
+              <label>v (m/s): <input type="range" id="q12-v" min="5" max="25" value="15" step="0.5" oninput="updateQ12()"> <span class="sim-value" id="q12-v-val">15</span></label>
+              <label>D (m): <input type="range" id="q12-d" min="4" max="30" value="10" step="0.5" oninput="updateQ12()"> <span class="sim-value" id="q12-d-val">10</span></label>
+              <label>Cp: <input type="range" id="q12-cp" min="0.2" max="0.59" value="0.45" step="0.01" oninput="updateQ12()"> <span class="sim-value" id="q12-cp-val">0.45</span></label>
+            </div>
+            <div class="result-block" id="q12-result">P<sub>out</sub> = 73.1 kW &nbsp;|&nbsp; Thrust &asymp; 9.73 kN</div>
+          `);
+        }
+
+        function updateQ12() {
+            const v = +document.getElementById('q12-v').value;
+            const D = +document.getElementById('q12-d').value;
+            const cp = +document.getElementById('q12-cp').value;
+            document.getElementById('q12-v-val').textContent = v;
+            document.getElementById('q12-d-val').textContent = D;
+            document.getElementById('q12-cp-val').textContent = cp.toFixed(2);
+            const A = Math.PI * (D / 2) ** 2;
+            const pd = 0.5 * 1.226 * v ** 3;
+            const pout = pd * cp * A;
+            const thrust = (2 * pout) / v;
+            document.getElementById('q12-result').innerHTML =
+                `Power density: <strong>${(pd/1000).toFixed(1)}</strong> kW/m&sup2; &nbsp;|&nbsp; P<sub>out</sub> = <strong>${(pout/1000).toFixed(1)}</strong> kW &nbsp;|&nbsp; Thrust &asymp; <strong>${(thrust/1000).toFixed(2)}</strong> kN`;
+        }
+
+        // ==================== Q13 & Q19 ====================
+        function buildQ13(container) {
+            addHeader(container, 13, 'Tip-Speed Ratio vs Solidity of WECS', 2, 2);
+            addCard(container, 'Definitions', `
+            <div class="math-block"><span class="var">&#955;</span> <span class="op">=</span> <span class="var">&#969;R</span> <span class="op">/</span> <span class="var">v</span><span style="display:inline-block;width:40px;"></span>(Tip-Speed Ratio)<br><span class="var">&#963;</span> <span class="op">=</span> <span class="var">B &#215; c</span> <span class="op">/</span> <span class="num">(2&#960;R)</span><span style="display:inline-block;width:40px;"></span>(Solidity)</div>
+            <table>
+              <tr><th>Aspect</th><th>TSR (&#955;)</th><th>Solidity (&#963;)</th></tr>
+              <tr><td>Indicates</td><td>How fast blades move vs wind</td><td>How much blade area fills the rotor</td></tr>
+              <tr><td>HAWT typical</td><td>High (6 – 8)</td><td>Low</td></tr>
+              <tr><td>VAWT typical</td><td>Low (1 – 3)</td><td>High</td></tr>
+            </table>
+          `);
+        }
+
+        function buildQ19(container) {
+            addHeader(container, 19, 'TSR & Solidity in Turbine Design', 2, 2);
+            buildQ13(container);
+            container.querySelector('.q-header h1').textContent = 'Q19. TSR & Solidity in Turbine Design';
+            container.querySelector('.q-meta').innerHTML =
+                '<span>Marks: 2</span><span>Repeated: 2 times</span>';
+        }
+
+        // ==================== Q14 ====================
+        function buildQ14(container) {
+            addHeader(container, 14, 'I-V & P-V Characteristics with Temperature & Irradiance', 3, 2);
+            addCard(container, 'Interactive Simulator', `
+            <div class="sim-controls">
+              <label>T (&deg;C): <input type="range" id="q14-temp" min="-10" max="75" value="25" step="1" oninput="drawQ14()"> <span class="sim-value" id="q14-temp-val">25</span></label>
+              <label>G (W/m&sup2;): <input type="range" id="q14-irr" min="200" max="1000" value="800" step="10" oninput="drawQ14()"> <span class="sim-value" id="q14-irr-val">800</span></label>
+            </div>
+            <div class="graph-container"><canvas id="q14-canvas" width="700" height="420"></canvas></div>
+            <div class="result-block" id="q14-mpp-info">Adjust sliders to compute MPP.</div>
+          `);
+        }
+
+        // ==================== Q15 & Q24 ====================
+        function buildQ15(container) {
+            addHeader(container, 15, 'Solar Collectors — Working, Concentration Ratio & Applications', 5, 2);
+            addCard(container, 'Working Principle', `
+            <p>Solar collectors capture sunlight and convert it into <strong>thermal energy</strong> (heat).</p>
+            <ul><li><strong>Flat-plate collector:</strong> Glass cover, black absorber plate, fluid tubes, and insulation.</li>
+            <li><strong>Concentrating collector:</strong> Mirrors or lenses focus sunlight onto a smaller receiver area.</li></ul>
+            <div class="math-block"><span class="var">CR</span> <span class="op">=</span> <span class="var">A</span><sub>aperture</sub> <span class="op">/</span> <span class="var">A</span><sub>receiver</sub></div>
+            <p>Thermal applications: domestic hot water, space heating, solar drying, solar cooking, industrial process heat, solar thermal power generation.</p>
+          `);
+            addCard(container, 'Solar Collector Diagram', `
+            <div style="text-align:center;">
+              <svg class="svg-diagram" viewBox="0 0 550 280" style="max-width:550px;background:var(--surface2);border-radius:12px;">
+                <circle cx="60" cy="50" r="30" fill="#f0c040" class="anim-glow"/>
+                <text x="60" y="54" text-anchor="middle" fill="#1a1a00" font-size="9" font-weight="700">SUN</text>
+                <line x1="90" y1="40" x2="140" y2="80" stroke="#f0c040" stroke-width="1.5" opacity="0.7"/>
+                <line x1="90" y1="50" x2="145" y2="90" stroke="#f0c040" stroke-width="1.5" opacity="0.7"/>
+                <line x1="85" y1="60" x2="140" y2="100" stroke="#f0c040" stroke-width="1.5" opacity="0.7"/>
+                <rect x="140" y="75" width="280" height="12" rx="3" fill="#88ccdd" opacity="0.5" stroke="#aaddff" stroke-width="1"/>
+                <text x="280" y="72" text-anchor="middle" fill="#aaddff" font-size="9">Glass Cover</text>
+                <rect x="145" y="92" width="270" height="10" rx="2" fill="#111" stroke="#444" stroke-width="1"/>
+                <text x="280" y="112" text-anchor="middle" fill="#dce4da" font-size="8">Black Absorber Plate</text>
+                <circle cx="190" cy="115" r="8" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                <circle cx="240" cy="115" r="8" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                <circle cx="290" cy="115" r="8" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                <circle cx="340" cy="115" r="8" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                <text x="280" y="135" text-anchor="middle" fill="#60a5fa" font-size="8">Fluid Tubes</text>
+                <rect x="140" y="145" width="280" height="20" rx="4" fill="#3a3520" stroke="#5a5530" stroke-width="1"/>
+                <text x="280" y="158" text-anchor="middle" fill="#8a8560" font-size="9">Insulation</text>
+                <text x="440" y="100" fill="#ff6b6b" font-size="9">Heat &rarr;</text>
+                <text x="440" y="120" fill="#ff6b6b" font-size="9">to fluid &rarr;</text>
+              </svg>
+            </div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span> Sunlight</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#88ccdd;"></span> Glass</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#60a5fa;"></span> Fluid Tubes</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#3a3520;"></span> Insulation</span>
+            </div>
+          `);
+        }
+
+        function buildQ24(container) {
+            addHeader(container, 24, 'Solar Collectors (Repeat)', 5, 2);
+            buildQ15(container);
+            container.querySelector('.q-header h1').textContent = 'Q24. Solar Collectors (Repeat)';
+        }
+
+        // ==================== Q16 ====================
+        function buildQ16(container) {
+            addHeader(container, 16, 'PV Module Sizing for 1 hp DC Motor', 5, 1);
+            addCard(container, 'Solution', `
+            <div class="math-block"><span class="var">P</span><sub>mech</sub> <span class="op">=</span> <span class="num">1 hp = 746 W</span><br><span class="var">P</span><sub>elec</sub> <span class="op">=</span> <span class="num">746</span> <span class="op">/</span> <span class="num">0.78</span> <span class="op">=</span> <span class="num">956.4</span> <span class="unit">W</span><br><span class="var">A</span><sub>cell</sub> <span class="op">=</span> <span class="num">0.125</span><sup>2</sup> <span class="op">=</span> <span class="num">0.015625</span> <span class="unit">m&sup2;</span><br><span class="var">A</span><sub>module</sub> <span class="op">=</span> <span class="num">36 &#215; 0.015625</span> <span class="op">=</span> <span class="num">0.5625</span> <span class="unit">m&sup2;</span><br><span class="var">P</span><sub>module</sub> <span class="op">=</span> <span class="num">800 &#215; 0.5625 &#215; 0.15</span> <span class="op">=</span> <span class="num">67.5</span> <span class="unit">W</span><br><span class="var">N</span> <span class="op">=</span> <span class="num">956.4</span> <span class="op">/</span> <span class="num">67.5</span> <span class="op">=</span> <span class="num">14.17</span> <span class="op">&rarr;</span> <span class="num">15</span> <span class="unit">modules</span></div>
+            <div class="result-block"><strong>15 modules</strong> are required to safely drive the motor.</div>
+          `);
+        }
+
+        // ==================== Q17 ====================
+        function buildQ17(container) {
+            addHeader(container, 17, 'MPPT Additional Power Gain & Payback Time', 5, 2);
+            addCard(container, 'Solution', `
+            <div class="math-block"><span class="var">P</span><sub>without</sub> <span class="op">=</span> <span class="num">10 &#215; 8</span> <span class="op">=</span> <span class="num">80</span> <span class="unit">W</span><br><span class="var">P</span><sub>MPP</sub> <span class="op">=</span> <span class="num">26 &#215; 6</span> <span class="op">=</span> <span class="num">156</span> <span class="unit">W</span><br><span class="var">P</span><sub>useful</sub> <span class="op">=</span> <span class="num">156 &#215; 0.95</span> <span class="op">=</span> <span class="num">148.2</span> <span class="unit">W</span><br><span class="var">&#916;P</span> <span class="op">=</span> <span class="num">148.2 &#8722; 80</span> <span class="op">=</span> <span class="num">68.2</span> <span class="unit">W</span><br><span class="var">Savings/hr</span> <span class="op">=</span> <span class="num">0.0682 &#215; 7</span> <span class="op">=</span> <span class="unit">Rs</span> <span class="num">0.4774</span><br><span class="var">Payback</span> <span class="op">=</span> <span class="num">4000</span> <span class="op">/</span> <span class="num">0.4774</span> <span class="op">&asymp;</span> <span class="num">8380</span> <span class="unit">hours</span> <span class="op">&asymp;</span> <span class="num">349</span> <span class="unit">days</span></div>
+            <div class="result-block">Additional power gain = <strong>68.2 W</strong> &nbsp;|&nbsp; Payback time &asymp; <strong>8380 hours (~349 days)</strong></div>
+          `);
+        }
+
+        // ==================== Q18 ====================
+        function buildQ18(container) {
+            addHeader(container, 18, 'Fill Factor of a Solar Panel', 2, 1);
+            addCard(container, 'Definition', `
+            <div class="math-block"><span class="var">FF</span> <span class="op">=</span> <span class="var">V</span><sub>mp</sub><span class="var">I</span><sub>mp</sub> <span class="op">/</span> (<span class="var">V</span><sub>oc</sub><span class="var">I</span><sub>sc</sub>)</div>
+            <p>Typical range for good-quality silicon panels: <strong>0.70 to 0.85</strong> (70% – 85%).</p>
+            <p>A higher fill factor means the panel wastes less of its potential power output.</p>
+          `);
+        }
+
+        // ==================== Q20 ====================
+        function buildQ20(container) {
+            addHeader(container, 20, '400 kW Turbine — Swept Area, Power, Capacity Factor & TSR', 4, 1);
+            addCard(container, 'Solution (R = 14 m, v = 15 m/s, N = 48 rpm, &#961; = 1.226 kg/m&sup3;)', `
+            <div class="math-block"><span class="var">A</span> <span class="op">=</span> <span class="num">&#960; &#215; 14</span><sup>2</sup> <span class="op">=</span> <span class="num">615.75</span> <span class="unit">m&sup2;</span><br><span class="var">P</span><sub>wind</sub> <span class="op">=</span> <span class="num">&frac12; &#215; 1.226 &#215; 615.75 &#215; 15</span><sup>3</sup> <span class="op">&asymp;</span> <span class="num">1270</span> <span class="unit">kW</span><br><span class="var">CF</span> <span class="op">=</span> <span class="num">400</span> <span class="op">/</span> <span class="num">1270</span> <span class="op">=</span> <span class="num">0.315</span> <span class="op">&asymp;</span> <span class="num">31.5%</span><br><span class="var">&#969;</span> <span class="op">=</span> <span class="num">2&#960; &#215; 48</span> <span class="op">/</span> <span class="num">60</span> <span class="op">=</span> <span class="num">5.027</span> <span class="unit">rad/s</span><br><span class="var">&#955;</span> <span class="op">=</span> <span class="num">(5.027 &#215; 14)</span> <span class="op">/</span> <span class="num">15</span> <span class="op">&asymp;</span> <span class="num">4.69</span></div>
+            <div class="result-block">Swept area = 615.8 m&sup2; | P<sub>wind</sub> = 1.27 MW | CF = 31.5% | TSR &asymp; 4.7</div>
+          `);
+        }
+
+        // ==================== Q21 ====================
+        function buildQ21(container) {
+            addHeader(container, 21, 'Solar Cell Equivalent Circuit & Current Equation', 3, 1);
+            addCard(container, 'Equivalent Circuit', `
+            <p>The solar cell is modelled as a <strong>current source</strong> (I<sub>ph</sub>) in parallel with a <strong>diode</strong>, along with a <strong>series resistance R<sub>s</sub></strong> and <strong>shunt resistance R<sub>sh</sub></strong>.</p>
+            <div class="math-block"><span class="var">I</span> <span class="op">=</span> <span class="var">I</span><sub>ph</sub> <span class="op">-</span> <span class="var">I</span><sub>o</sub><span class="fn">[</span><span class="fn">exp</span>(<span class="num">(V + IR<sub>s</sub>) / (nV<sub>t</sub>)</span>) <span class="op">-</span> <span class="num">1</span><span class="fn">]</span> <span class="op">-</span> <span class="num">(V + IR<sub>s</sub>) / R<sub>sh</sub></span></div>
+            <p>where <span class="var">V<sub>t</sub></span> = <span class="var">kT/q</span> is the thermal voltage, <span class="var">n</span> is the ideality factor, and <span class="var">I<sub>o</sub></span> is the diode saturation current.</p>
+          `);
+            addCard(container, 'Circuit Diagram', `
+            <div style="text-align:center;">
+              <svg viewBox="0 0 400 200" style="max-width:400px;background:var(--surface2);border-radius:12px;">
+                <circle cx="60" cy="100" r="25" fill="none" stroke="#f0c040" stroke-width="2"/>
+                <text x="60" y="104" text-anchor="middle" fill="#f0c040" font-size="9">I<sub>ph</sub></text>
+                <line x1="85" y1="100" x2="130" y2="100" stroke="#dce4da" stroke-width="1.5"/>
+                <line x1="130" y1="70" x2="130" y2="130" stroke="#dce4da" stroke-width="1.5"/>
+                <polygon points="130,70 170,100 130,130" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                <line x1="170" y1="100" x2="200" y2="100" stroke="#dce4da" stroke-width="1.5"/>
+                <rect x="200" y="92" width="40" height="16" rx="3" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+                <text x="220" y="85" text-anchor="middle" fill="#ff6b6b" font-size="8">R<sub>s</sub></text>
+                <line x1="240" y1="100" x2="280" y2="100" stroke="#dce4da" stroke-width="1.5"/>
+                <rect x="270" y="100" width="30" height="60" rx="4" fill="none" stroke="#f0c040" stroke-width="1.5"/>
+                <text x="285" y="175" text-anchor="middle" fill="#f0c040" font-size="8">R<sub>sh</sub></text>
+                <line x1="280" y1="100" x2="320" y2="100" stroke="#dce4da" stroke-width="1.5"/>
+                <circle cx="325" cy="100" r="4" fill="#59d669"/>
+                <circle cx="60" cy="140" r="4" fill="#59d669"/>
+                <line x1="60" y1="125" x2="60" y2="136" stroke="#dce4da" stroke-width="1.5"/>
+                <line x1="320" y1="104" x2="320" y2="136" stroke="#dce4da" stroke-width="1.5"/>
+                <text x="320" y="155" text-anchor="middle" fill="#59d669" font-size="9">Load</text>
+              </svg>
+            </div>
+          `);
+        }
+
+        // ==================== Q22 ====================
+        function buildQ22(container) {
+            addHeader(container, 22, 'Solar Radiation Measurement Instruments', 4, 1);
+            addCard(container, 'Instruments Overview', `
+            <table>
+              <tr><th>Instrument</th><th>Measures</th></tr>
+              <tr><td><strong>Pyranometer</strong></td><td>Global solar radiation (direct + diffuse) on a flat surface</td></tr>
+              <tr><td><strong>Pyrheliometer</strong></td><td>Direct beam radiation from the sun</td></tr>
+              <tr><td><strong>Sunshine Recorder</strong></td><td>Duration of bright sunshine hours</td></tr>
+              <tr><td><strong>Pyrgeometer</strong></td><td>Long-wave infrared radiation from sky or ground</td></tr>
+            </table>
+          `);
+        }
+
+        // ==================== Q23 ====================
+        function buildQ23(container) {
+            addHeader(container, 23, 'Cp-&#955; Curves & Power Characteristics (Repeat)', 3, 1);
+            buildQ5(container);
+            container.querySelector('.q-header h1').textContent = 'Q23. Cp-&#955; Curves & Power Characteristics';
+            container.querySelector('.q-meta').innerHTML = '<span>Marks: 3</span><span>Repeated: 1 time</span>';
+        }
+
+        // ==================== Q25 ====================
+        function buildQ25(container) {
+            addHeader(container, 25, 'PV Hybrid Systems', 3, 2);
+            addCard(container, 'Types & Purpose', `
+            <ul><li><strong>PV + Wind</strong> — complementary generation cycles</li>
+            <li><strong>PV + Battery</strong> — energy storage for night/cloudy periods</li>
+            <li><strong>PV + Diesel</strong> — reliable backup generation</li>
+            <li><strong>PV + Fuel Cell</strong> — clean hydrogen-based backup</li></ul>
+            <p>The primary purpose is <strong>reliability</strong> — ensuring continuous power supply even when solar radiation is unavailable.</p>
+          `);
+        }
+
+        // ==================== Q26 ====================
+        function buildQ26(container) {
+            addHeader(container, 26, 'Biogas Working Principle (Repeat)', 6, 3);
+            buildQ11(container);
+            container.querySelector('.q-header h1').textContent = 'Q26. Biogas Working Principle';
+            container.querySelector('.q-meta').innerHTML = '<span>Marks: 6</span><span>Repeated: 3 times</span>';
+            currentSteps['q11'] = 1;
+        }
+
+        // ==================== Q27 ====================
+        function buildQ27(container) {
+            addHeader(container, 27, 'Short Notes — 5 Topics', '2 &times; 5', 'varies');
+            addCard(container, '1. Biodiesel',
+                '<p>Renewable fuel produced from vegetable oils or animal fats through <strong>transesterification</strong> with alcohol and a catalyst. Biodegradable, lower emissions, and usable in diesel engines with minimal modification.</p>'
+                );
+            addCard(container, '2. Hybrid Electric Vehicles',
+                '<p>Combines an internal combustion engine (ICE) with an electric motor and battery. <strong>Regenerative braking</strong> recovers energy during deceleration, improving overall fuel efficiency.</p>'
+                );
+            addCard(container, '3. PEM Fuel Cell',
+                '<p>Uses hydrogen and oxygen to produce electricity, with water as the only byproduct. Operates at low temperature (~80&deg;C). The proton exchange membrane allows H&#8314; ions to pass while electrons flow through an external circuit.</p>'
+                );
+            addCard(container, '4. Anaerobic Digestion',
+                '<p>Microbial breakdown of organic waste in the <strong>absence of oxygen</strong>. Produces biogas (CH&#8324; + CO&#8322;) and a nutrient-rich digestate that can be used as fertilizer.</p>'
+                );
+            addCard(container, '5. Smart Grid',
+                '<p>A modern electrical grid that uses digital communication and control systems to manage electricity flow, integrate renewable energy sources, and improve overall reliability and efficiency.</p>'
+                );
+        }
+
+        // ==================== INIT INTERACTIVE ====================
+        function initInteractive(qId, container) {
+            if (qId === 'q1') updateQ1();
+            if (qId === 'q2') drawPVCurves();
+            if (qId === 'q5' || qId === 'q23') { drawCpLambda();
+                drawPowerCurve(); }
+            if (qId === 'q10') updateQ10Step();
+            if (qId === 'q11' || qId === 'q26') updateQ11Step();
+            if (qId === 'q12') updateQ12();
+            if (qId === 'q14') drawQ14();
+        }
+
+        // ==================== PV CURVE DRAWING ====================
+        function drawPVOnCanvas(canvas, temp, irr, infoId) {
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width,
+                H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+            const tempK = temp + 273.15;
+            const Vt = 0.02585 * (tempK / 298.15);
+            const Isc = (irr / 1000) * 8.5;
+            const Voc_base = 0.65;
+            const dVoc = -0.0023 * (temp - 25);
+            const Voc = Math.max(0.4, Voc_base + dVoc);
+            const n = 1.3;
+            const Io = Isc / (Math.exp(Voc / (n * Vt)) - 1);
+            const Rs = 0.015,
+                Rsh = 200;
+            const margin = { top: 30, right: 40, bottom: 45, left: 55 };
+            const pw = W - margin.left - margin.right;
+            const ph = H - margin.top - margin.bottom;
+            const xMax = Voc * 1.1;
+            const yMaxIV = Isc * 1.15;
+            const yMaxPV = Voc * Isc * 0.8;
+            ctx.fillStyle = '#1b2a1d';
+            ctx.fillRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#3a4a38';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#2a3a2a';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 5; i++) {
+                const y = margin.top + (ph / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + pw, y);
+                ctx.stroke();
+                const x = margin.left + (pw / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + ph);
+                ctx.stroke();
+            }
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Voltage V (V)', margin.left + pw / 2, H - 8);
+            ctx.save();
+            ctx.translate(12, margin.top + ph / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Current I (A)  /  Power P (W)', 0, 0);
+            ctx.restore();
+            const ivData = [],
+                pvData = [];
+            let mppIdx = 0,
+                maxP = 0;
+            const Iph = Isc * (1 + 0.0005 * (temp - 25));
+            const N = 300;
+            for (let i = 0; i < N; i++) {
+                const V = (i / (N - 1)) * xMax;
+                let I = Isc;
+                for (let iter = 0; iter < 20; iter++) {
+                    const expTerm = Math.exp((V + I * Rs) / (n * Vt));
+                    const f = Iph - Io * (expTerm - 1) - (V + I * Rs) / Rsh - I;
+                    const df = -Io * (Rs / (n * Vt)) * expTerm - Rs / Rsh - 1;
+                    I -= f / df;
+                    if (Math.abs(f) < 1e-6) break;
+                }
+                I = Math.max(0, I);
+                ivData.push({ V, I });
+                const P = V * I;
+                pvData.push({ V, P });
+                if (P > maxP) { maxP = P;
+                    mppIdx = i; }
+            }
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < ivData.length; i++) {
+                const x = margin.left + (ivData[i].V / xMax) * pw;
+                const y = margin.top + ph - (ivData[i].I / yMaxIV) * ph;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.strokeStyle = '#f0c040';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let i = 0; i < pvData.length; i++) {
+                const x = margin.left + (pvData[i].V / xMax) * pw;
+                const y = margin.top + ph - (pvData[i].P / yMaxPV) * ph;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            if (mppIdx < ivData.length && maxP > 0) {
+                const mx = margin.left + (ivData[mppIdx].V / xMax) * pw;
+                const my = margin.top + ph - (ivData[mppIdx].I / yMaxIV) * ph;
+                const mpy = margin.top + ph - (pvData[mppIdx].P / yMaxPV) * ph;
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(mx, my, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(mx, mpy, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(`MPP: ${maxP.toFixed(1)} W`, mx + 10, my - 8);
+                const infoEl = document.getElementById(infoId);
+                if (infoEl) infoEl.innerHTML =
+                    `MPP: <strong>${ivData[mppIdx].V.toFixed(2)} V</strong> &times; <strong>${ivData[mppIdx].I.toFixed(2)} A</strong> = <strong>${maxP.toFixed(1)} W</strong> &nbsp;|&nbsp; V<sub>oc</sub> &asymp; ${Voc.toFixed(3)} V &nbsp;|&nbsp; I<sub>sc</sub> &asymp; ${Isc.toFixed(2)} A`;
+            }
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '9px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const val = (yMaxIV / 5) * i;
+                const y = margin.top + ph - (val / yMaxIV) * ph;
+                ctx.fillText(val.toFixed(1), margin.left - 6, y + 3);
+            }
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const val = (xMax / 5) * i;
+                const x = margin.left + (val / xMax) * pw;
+                ctx.fillText(val.toFixed(2), x, margin.top + ph + 14);
+            }
+        }
+
+        function drawPVCurves() {
+            const canvas = document.getElementById('q2-canvas');
+            if (!canvas) return;
+            const temp = +document.getElementById('q2-temp').value;
+            const irr = +document.getElementById('q2-irr').value;
+            document.getElementById('q2-temp-val').textContent = temp;
+            document.getElementById('q2-irr-val').textContent = irr;
+            drawPVOnCanvas(canvas, temp, irr, 'q2-mpp-info');
+        }
+
+        function drawQ14() {
+            const canvas = document.getElementById('q14-canvas');
+            const temp = +document.getElementById('q14-temp').value;
+            const irr = +document.getElementById('q14-irr').value;
+            if (!canvas) return;
+            document.getElementById('q14-temp-val').textContent = temp;
+            document.getElementById('q14-irr-val').textContent = irr;
+            drawPVOnCanvas(canvas, temp, irr, 'q14-mpp-info');
+        }
+
+        // ==================== Cp-Lambda Curve ====================
+        function drawCpLambda() {
+            const canvas = document.getElementById('q5-cp-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width,
+                H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+            const rotor = document.getElementById('q5-rotor').value;
+            const margin = { top: 25, right: 35, bottom: 40, left: 50 };
+            const pw = W - margin.left - margin.right;
+            const ph = H - margin.top - margin.bottom;
+            const lambdaMax = 12,
+                cpMax = 0.6;
+            ctx.fillStyle = '#1b2a1d';
+            ctx.fillRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#3a4a38';
+            ctx.strokeRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#2a3a2a';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 6; i++) {
+                const x = margin.left + (pw / 6) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + ph);
+                ctx.stroke();
+                const y = margin.top + (ph / 6) * i;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + pw, y);
+                ctx.stroke();
+            }
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Tip-Speed Ratio  &#955;', margin.left + pw / 2, H - 8);
+            ctx.save();
+            ctx.translate(12, margin.top + ph / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Power Coefficient  C\u209A', 0, 0);
+            ctx.restore();
+
+            function getCp(lambda, type) {
+                if (lambda <= 0) return 0;
+                switch (type) {
+                    case 'hawt3':
+                        return 0.52 * Math.exp(-((lambda - 7) ** 2) / 18) + 0.05 * Math.exp(-((lambda - 6.5) ** 2) /
+                            3);
+                    case 'hawt2':
+                        return 0.48 * Math.exp(-((lambda - 7.5) ** 2) / 20) + 0.04 * Math.exp(-((lambda - 7) ** 2) / 4);
+                    case 'savonius':
+                        return 0.25 * Math.exp(-((lambda - 1.5) ** 2) / 4) + 0.03 * Math.exp(-((lambda - 2) ** 2) / 1.5);
+                    case 'darrieus':
+                        return 0.4 * Math.exp(-((lambda - 5) ** 2) / 14) + 0.06 * Math.exp(-((lambda - 4.5) ** 2) / 5);
+                    default:
+                        return 0.5 * Math.exp(-((lambda - 7) ** 2) / 18);
+                }
+            }
+            const N = 400;
+            const data = [];
+            let maxCp = 0,
+                bestLambda = 0;
+            for (let i = 0; i < N; i++) {
+                const lambda = (i / (N - 1)) * lambdaMax;
+                const cp = getCp(lambda, rotor);
+                data.push({ lambda, cp });
+                if (cp > maxCp) { maxCp = cp;
+                    bestLambda = lambda; }
+            }
+            ctx.fillStyle = 'rgba(89,214,105,0.08)';
+            ctx.beginPath();
+            const startY = margin.top + ph;
+            ctx.moveTo(margin.left, startY);
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (data[i].lambda / lambdaMax) * pw;
+                const y = margin.top + ph - (data[i].cp / cpMax) * ph;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(margin.left + pw, startY);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#59d669';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (data[i].lambda / lambdaMax) * pw;
+                const y = margin.top + ph - (data[i].cp / cpMax) * ph;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            const mx = margin.left + (bestLambda / lambdaMax) * pw;
+            const my = margin.top + ph - (maxCp / cpMax) * ph;
+            ctx.fillStyle = '#f0c040';
+            ctx.beginPath();
+            ctx.arc(mx, my, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.font = '10px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Max C\u209A: ${maxCp.toFixed(3)} at &#955;=${bestLambda.toFixed(1)}`, mx + 12, my - 6);
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '9px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 6; i++) {
+                const val = (cpMax / 6) * i;
+                const y = margin.top + ph - (val / cpMax) * ph;
+                ctx.fillText(val.toFixed(2), margin.left - 6, y + 3);
+            }
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 6; i++) {
+                const val = (lambdaMax / 6) * i;
+                const x = margin.left + (val / lambdaMax) * pw;
+                ctx.fillText(val.toFixed(0), x, margin.top + ph + 14);
+            }
+            ctx.strokeStyle = '#ff6b6b';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([6, 4]);
+            const betzY = margin.top + ph - (0.593 / cpMax) * ph;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, betzY);
+            ctx.lineTo(margin.left + pw, betzY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#ff6b6b';
+            ctx.textAlign = 'left';
+            ctx.fillText('Betz Limit (0.593)', margin.left + 4, betzY - 4);
+        }
+
+        // ==================== Power Curve ====================
+        function drawPowerCurve() {
+            const canvas = document.getElementById('q5-power-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width,
+                H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+            const Prated = +document.getElementById('q5-rated').value;
+            const Vrated = +document.getElementById('q5-vrated').value;
+            document.getElementById('q5-rated-val').textContent = Prated;
+            document.getElementById('q5-vrated-val').textContent = Vrated;
+            const margin = { top: 25, right: 35, bottom: 40, left: 55 };
+            const pw = W - margin.left - margin.right;
+            const ph = H - margin.top - margin.bottom;
+            const vMax = 25,
+                pMax = Prated * 1.3;
+            ctx.fillStyle = '#1b2a1d';
+            ctx.fillRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#3a4a38';
+            ctx.strokeRect(margin.left, margin.top, pw, ph);
+            ctx.strokeStyle = '#2a3a2a';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 5; i++) {
+                const x = margin.left + (pw / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + ph);
+                ctx.stroke();
+                const y = margin.top + (ph / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + pw, y);
+                ctx.stroke();
+            }
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Wind Speed v (m/s)', margin.left + pw / 2, H - 8);
+            ctx.save();
+            ctx.translate(12, margin.top + ph / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Power P (kW)', 0, 0);
+            ctx.restore();
+            const rho = 1.226,
+                A = Math.PI * 7 ** 2,
+                Cp = 0.4;
+            const N = 300;
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const v = (i / (N - 1)) * vMax;
+                let p;
+                if (v < 3) p = 0;
+                else if (v < Vrated) p = 0.5 * rho * A * v ** 3 * Cp / 1000;
+                else if (v < 22) p = Prated;
+                else p = 0;
+                data.push({ v, p: Math.min(p, Prated * 1.05) });
+            }
+            ctx.fillStyle = 'rgba(96,165,250,0.1)';
+            ctx.beginPath();
+            const startY = margin.top + ph;
+            ctx.moveTo(margin.left, startY);
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (data[i].v / vMax) * pw;
+                const y = margin.top + ph - (data[i].p / pMax) * ph;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(margin.left + pw, startY);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const x = margin.left + (data[i].v / vMax) * pw;
+                const y = margin.top + ph - (data[i].p / pMax) * ph;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            const rx = margin.left + (Vrated / vMax) * pw;
+            const ry = margin.top + ph - (Prated / pMax) * ph;
+            ctx.fillStyle = '#f0c040';
+            ctx.beginPath();
+            ctx.arc(rx, ry, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.font = '10px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Rated: ${Prated} kW @ ${Vrated} m/s`, rx + 10, ry - 6);
+            ctx.fillStyle = '#b8c4b5';
+            ctx.font = '9px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const val = (pMax / 5) * i;
+                const y = margin.top + ph - (val / pMax) * ph;
+                ctx.fillText(Math.round(val), margin.left - 6, y + 3);
+            }
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const val = (vMax / 5) * i;
+                const x = margin.left + (val / vMax) * pw;
+                ctx.fillText(val.toFixed(0), x, margin.top + ph + 14);
+            }
+        }
+
+        // ==================== STEP ANIMATIONS ====================
+        function stepAnim(id, dir) {
+            const total = 5;
+            if (!currentSteps[id]) currentSteps[id] = 1;
+            currentSteps[id] += dir;
+            if (currentSteps[id] < 1) currentSteps[id] = total;
+            if (currentSteps[id] > total) currentSteps[id] = 1;
+            if (id === 'q10') updateQ10Step();
+            if (id === 'q11') updateQ11Step();
+        }
+
+        function toggleAuto(id) {
+            if (autoPlayTimers[id]) {
+                clearInterval(autoPlayTimers[id]);
+                delete autoPlayTimers[id];
+                const btn = document.getElementById(id + '-auto');
+                if (btn) btn.textContent = '\u25b6 Auto-Play';
+                return;
+            }
+            const speed = +document.getElementById(id + '-speed').value;
+            const btn = document.getElementById(id + '-auto');
+            if (btn) btn.textContent = '\u23f8 Stop';
+            autoPlayTimers[id] = setInterval(() => stepAnim(id, 1), speed);
+        }
+
+        function updateSpeed(id) {
+            if (autoPlayTimers[id]) {
+                clearInterval(autoPlayTimers[id]);
+                const speed = +document.getElementById(id + '-speed').value;
+                autoPlayTimers[id] = setInterval(() => stepAnim(id, 1), speed);
+            }
+        }
+
+        function updateQ10Step() {
+            const s = currentSteps['q10'] || 1;
+            document.getElementById('q10-step-indicator').textContent = `Step ${s} / 5`;
+            const pg = document.getElementById('q10-particles');
+            if (!pg) return;
+            pg.innerHTML = '';
+            const descs = [
+                'Step 1: Hydrogen (H\u2082) is supplied at the anode.',
+                'Step 2: Catalyst splits H\u2082 \u2192 2H\u207A + 2e\u207B at the anode.',
+                'Step 3: Protons (H\u207A) pass through the PEM membrane.',
+                'Step 4: Electrons (e\u207B) flow through the external circuit \u2192 electricity.',
+                'Step 5: At the cathode: O\u2082 + 4H\u207A + 4e\u207B \u2192 2H\u2082O (water formed).'
+            ];
+            if (s >= 1) pg.innerHTML +=
+                '<circle cx="50" cy="100" r="8" fill="#59d669" opacity="0.8"><animate attributeName="cy" from="260" to="100" dur="1.5s" repeatCount="indefinite"/></circle>';
+            if (s >= 2) pg.innerHTML +=
+                '<circle cx="100" cy="140" r="4" fill="#f0c040" opacity="0.9"><animate attributeName="cx" from="80" to="130" dur="1s" repeatCount="indefinite"/></circle>';
+            if (s >= 3) pg.innerHTML +=
+                '<circle cx="155" cy="130" r="5" fill="#7dd4bd" opacity="0.9"><animate attributeName="cy" from="180" to="90" dur="0.8s" repeatCount="indefinite"/></circle>';
+            if (s >= 4) pg.innerHTML +=
+                '<circle r="4" fill="#f0c040" opacity="0.9"><animateMotion dur="1.3s" repeatCount="indefinite" path="M20,60 L20,25 L290,25 L290,60"/></circle>';
+            if (s >= 5) pg.innerHTML +=
+                '<circle cx="230" cy="200" r="7" fill="#60a5fa" opacity="0.8"><animate attributeName="r" values="5;9;5" dur="2s" repeatCount="indefinite"/></circle>';
+            const descEl = document.getElementById('q10-desc');
+            if (descEl) descEl.textContent = descs[s - 1];
+        }
+
+        function updateQ11Step() {
+            const s = currentSteps['q11'] || 1;
+            document.getElementById('q11-step-indicator').textContent = `Step ${s} / 5`;
+            const ag = document.getElementById('q11-anim-group');
+            if (!ag) return;
+            ag.innerHTML = '';
+            const descs = [
+                'Step 1: Organic waste slurry is fed through the inlet pipe into the digester.',
+                'Step 2: Anaerobic bacteria break down the waste without oxygen (digestion).',
+                'Step 3: Biogas (CH\u2084 + CO\u2082) rises and collects under the fixed dome.',
+                'Step 4: Gas pressure pushes spent slurry out through the outlet pipe.',
+                'Step 5: Biogas is drawn through the gas pipe for use as cooking/heating fuel.'
+            ];
+            if (s >= 1) ag.innerHTML +=
+                '<rect x="60" y="180" width="30" height="15" rx="5" fill="#5a4a2a" opacity="0.9"><animate attributeName="y" from="140" to="230" dur="2s" repeatCount="indefinite"/></rect>';
+            if (s >= 2) ag.innerHTML +=
+                '<circle cx="250" cy="235" r="4" fill="#7dd4bd" opacity="0.7"><animate attributeName="r" values="3;7;3" dur="1.5s" repeatCount="indefinite"/></circle><circle cx="340" cy="235" r="4" fill="#7dd4bd" opacity="0.7"><animate attributeName="r" values="3;7;3" dur="1.3s" repeatCount="indefinite"/></circle>';
+            if (s >= 3) {
+                document.getElementById('q11-gas-pocket').setAttribute('opacity', '0.7');
+                ag.innerHTML +=
+                    '<circle cx="280" cy="180" r="5" fill="#f0c040" opacity="0.8"><animate attributeName="cy" from="230" to="170" dur="2s" repeatCount="indefinite"/></circle>';
+            } else { document.getElementById('q11-gas-pocket').setAttribute('opacity', '0.25'); }
+            if (s >= 4) ag.innerHTML +=
+                '<rect x="495" y="230" width="25" height="12" rx="4" fill="#8a7060" opacity="0.8"><animate attributeName="y" from="230" to="270" dur="2.5s" repeatCount="indefinite"/></rect>';
+            if (s >= 5) ag.innerHTML +=
+                '<circle cx="300" cy="42" r="10" fill="#ff6b2b" opacity="0.8"><animate attributeName="r" values="8;14;8" dur="0.6s" repeatCount="indefinite"/></circle>';
+            const descEl = document.getElementById('q11-desc');
+            if (descEl) descEl.textContent = descs[s - 1];
+        }
+
+        // ==================== STARTUP ====================
+        function init() {
+            const first = document.querySelector('#nav-list li a[data-q]');
+            if (first) selectQuestion(first.getAttribute('data-q'));
+        }
+        window.addEventListener('resize', () => {
+            if (activeQuestion === 'q2') drawPVCurves();
+            if (activeQuestion === 'q5' || activeQuestion === 'q23') { drawCpLambda();
+                drawPowerCurve(); }
+            if (activeQuestion === 'q14') drawQ14();
+        });
+        document.addEventListener('DOMContentLoaded', init);
+        console.log('Renewable Energy Interactive Study Guide ready.');
+    </script>
+</body>
+</html>
